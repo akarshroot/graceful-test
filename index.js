@@ -15,17 +15,28 @@ const server = app.listen(3000, () => {
   console.log('listening...');
 })
 
-function closeGracefully(signal, server) {
-  console.log(`Got ${signal}, initializing graceful shutdown!`);
-  server.close(() => {
-    console.log('Server is gracefully terminated');
-  });
-}
+  function gracefulExit(server) {
+    if (shuttingDown) return
+    shuttingDown = true
+    console.log('Received kill signal (SIGTERM), shutting down')
+
+    setTimeout(function() {
+      console.log(
+        'Could not close connections in time, forcefully shutting down'
+      )
+      process.exit(1)
+    }, 30000).unref()
+
+    server.close(function() {
+      console.log('Closed out remaining connections.')
+      process.exit()
+    })
+  }
 
 process.on('SIGINT', () => {
   closeGracefully('SIGINT', server);
 })
 
 process.on('SIGTERM', () => {
-  closeGracefully('SIGTERM', server);
+  gracefulExit(server);
 })
