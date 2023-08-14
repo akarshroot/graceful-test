@@ -1,6 +1,11 @@
 const express = require('express');
 const app = express();
 
+app.get('/', (req, res) => {
+  console.log('[GET] /')
+  res.send('Hello from graceful server!');
+})
+
 app.get('/health-check', async (req, res) => {
   console.log('health check started');
   const data = await new Promise((res, rej) => {
