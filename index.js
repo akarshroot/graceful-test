@@ -19,7 +19,7 @@ app.get('/health-check', async (req, res) => {
 const server = app.listen(3000, () => {
   console.log('listening...');
 })
-
+let shuttingDown = false;
   function gracefulExit(server) {
     if (shuttingDown) return
     shuttingDown = true
