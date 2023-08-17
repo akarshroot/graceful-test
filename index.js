@@ -39,7 +39,7 @@ let shuttingDown = false;
   }
 
 process.on('SIGINT', () => {
-  closeGracefully('SIGINT', server);
+  gracefulExit('SIGINT', server);
 })
 
 process.on('SIGTERM', () => {
